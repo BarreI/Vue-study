@@ -8,28 +8,24 @@
 <body>
 
   <div id="app">
-    {{ message }}
+    <span v-if="seen">storeだぞ</span>
   </div>
+  <div>
+    <input type="datetime-local">
+  </div>
+  <div>
+    <select name="example1">
+      <option value="サンプル1">選択肢のサンプル1</option>
+      <option value="サンプル2">選択肢のサンプル2</option>
+      <option value="サンプル3">選択肢のサンプル3</option>
+      <option value="サンプル4">選択肢のサンプル4</option>
+      <option value="サンプル5">選択肢のサンプル5</option>
+      <option value="サンプル5">選択肢のサンプル6</option>
+      <option value="サンプル5">選択肢のサンプル7</option>
+    </select>
+  </div>
+  
 
-
-  <table>
-
-    <thead>
-      <tr id="tabley">
-        <th>null</th>
-        <th v-for="item in items" :key="item.message">{{item.message}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <div id="tablex">
-      <tr v-for="item in items">
-        <td v-for="item in items">
-          {{item.message}}
-        </td>
-      </tr>
-    </div>
-    </tbody>
-  </table>
 
   <script src="index.js"></script>
 </body>
