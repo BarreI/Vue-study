@@ -1,33 +1,119 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 
 <head>
-  <link rel="stylesheet" href="index.css">
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <title>Document</title>
 </head>
 
 <body>
-
   <div id="app">
-    <span v-if="seen">storeだぞ</span>
-  </div>
-  <div>
-    <input type="datetime-local">
-  </div>
-  <div>
-    <select name="example1">
-      <option value="サンプル1">選択肢のサンプル1</option>
-      <option value="サンプル2">選択肢のサンプル2</option>
-      <option value="サンプル3">選択肢のサンプル3</option>
-      <option value="サンプル4">選択肢のサンプル4</option>
-      <option value="サンプル5">選択肢のサンプル5</option>
-      <option value="サンプル5">選択肢のサンプル6</option>
-      <option value="サンプル5">選択肢のサンプル7</option>
-    </select>
-  </div>
-  
-
-
-  <script src="index.js"></script>
+    <div id="gantt-header" class="h-12 p-2 flex items-center">
+      <h1 class="text-xl font-bold">ガントチャート</h1>
+    </div>
+    <div id="gantt-content" class="flex">
+      <div id="gantt-task">
+        <div id="gantt-task">
+          <div id="gantt-task-title" class="flex items-center bg-green-600 text-white h-20">
+            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-36 h-full">担当
+            </div>
+            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">開始時間
+            </div>
+            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">終了時間
+            </div>
+            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">役職
+            </div>
+            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-16 h-full">給金
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="gantt-calendar">
+        <div id="gantt-date" class="h-20">
+          <div id="gantt-year-month" class="relative h-8">
+            <div v-for="(calendar,index) in calendars" :key="index">
+              <div
+                class="bg-indigo-700 text-white border-b border-r border-t h-8 absolute font-bold text-sm flex items-center justify-center"
+                :style="`width:${calendar.calendar*block_size}px;left:${calendar.start_block_number*block_size}px`">
+                {{calendar.date}}
+              </div>
+            </div>
+          </div>
+          <div id="gantt-day" class="relative h-12">
+            <div v-for="(calendar,index) in calendars" :key="index">
+              <div v-for="(day,index) in calendar.days" :key="index">
+                <div class="border-r h-12 absolute flex items-center justify-center flex-col font-bold text-xs"
+                  :style="`width:${block_size}px;left:${day.block_number*block_size}px`">
+                  <span>{{ day.day }}</span>
+                  <span>{{ day.dayOfWeek }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            start_month: '2021-1',
+            end_month: '2022-1',
+            block_size: 30,
+            block_number: 0,
+            calendars: []
+          }
+        },
+        methods: {
+          getDays(year, month, block_number) {
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+            let days = [];
+            let date = moment(`${year}-${month}-01`);
+            let num = date.daysInMonth();
+            for (let i = 0; i < num; i++) {
+              days.push({
+                day: date.date(),
+                dayOfWeek: dayOfWeek[date.day()],
+                block_number
+              })
+              date.add(1, 'day');
+              block_number++;
+            }
+            return days;
+          },
+          getCalendar() {
+            let block_number = 0;
+            let days;
+            let start_month = moment(this.start_month)
+            let end_month = moment(this.end_month)
+            let between_month = end_month.diff(start_month, 'months')
+            for (let i = 0; i <= between_month; i++) {
+              days = this.getDays(start_month.year(), start_month.format('MM'), block_number);
+              this.calendars.push({
+                date: start_month.format('YYYY年MM月'),
+                year: start_month.year(),
+                month: start_month.month(), //month(), 0,1..11と表示
+                start_block_number: block_number,
+                calendar: days.length,
+                days: days
+              })
+              start_month.add(1, 'months')
+              block_number = days[days.length - 1].block_number
+              block_number++;
+            }
+            return block_number;
+          },
+        },
+        mounted() {
+          this.getCalendar();
+        }
+      }).mount('#app')
+    </script>
 </body>
 
 </html>
