@@ -18,18 +18,16 @@
     </div>
     <div id="gantt-content" class="flex">
       <div id="gantt-task">
-        <div id="gantt-task">
-          <div id="gantt-task-title" class="flex items-center bg-green-600 text-white h-20">
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-36 h-full">担当
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">開始時間
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">終了時間
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">役職
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-16 h-full">給金
-            </div>
+        <div id="gantt-task-title" class="flex items-center bg-green-600 text-white h-20">
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-36 h-full">担当
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">開始時間
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">終了時間
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">役職
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-16 h-full">給金
           </div>
         </div>
       </div>
@@ -40,21 +38,18 @@
             <div v-for="(calendar,index) in calendars" :key="index">
               <div
                 class="bg-indigo-700 text-white border-b border-r border-t h-8 absolute font-bold text-sm flex items-center justify-center"
-                :style="`width:${calendar.calendar*block_size}px;left:${calendar.start_block_number*block_size}px`">
+                :style="`width:${96*block_size}px;left:${calendar.start_block_number*block_size}px`">
                 {{calendar.date}}
               </div>
             </div>
           </div>
           <div id="gantt-day" class="relative h-12">
-            <div v-for="(calendar,index) in calendars" :key="index">
-              <div v-for="(day,index) in calendar.days" :key="index">
+              <div v-for="(time,index) in this.getTime()" :key="index">
                 <div class="border-r h-12 absolute flex items-center justify-center flex-col font-bold text-xs"
-                  :style="`width:${block_size}px;left:${day.block_number*block_size}px`">
-                  <span>{{ day.day }}</span>
-                  <span>{{ day.dayOfWeek }}</span>
+                  :style="`width:${block_size}px;left:${time.block_number*block_size}px`">
+                  <span>{{ time.time }}</span>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </div>
@@ -66,7 +61,7 @@
           return {
             start_month: '2021-1',
             end_month: '2022-1',
-            block_size: 30,
+            block_size: 50,
             block_number: 0,
             calendars: []
           }
@@ -88,11 +83,11 @@
             }
             return days;
           },
-          getTime(){
+          getTime() {
             let block_number = 0;
-            let time = moment('00:00','HH:mm');
+            let time = moment('00:00', 'HH:mm');
             let fifteen = [];
-            for(let i = 0; i <= 96; i++){
+            for (let i = 0; i <= 96; i++) {
               fifteen.push({
                 time: time.format("HH:mm"),
                 block_number
@@ -126,6 +121,7 @@
           },
         },
         mounted() {
+          this.getCalendar();
           console.log(this.getTime());
         }
       }).mount('#app')
