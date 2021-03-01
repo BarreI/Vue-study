@@ -33,6 +33,7 @@
           </div>
         </div>
       </div>
+
       <div id="gantt-calendar">
         <div id="gantt-date" class="h-20">
           <div id="gantt-year-month" class="relative h-8">
@@ -57,6 +58,7 @@
           </div>
         </div>
       </div>
+
     </div>
     <script>
       const app = Vue.createApp({
@@ -86,6 +88,20 @@
             }
             return days;
           },
+          getTime(){
+            let block_number = 0;
+            let time = moment('00:00','HH:mm');
+            let fifteen = [];
+            for(let i = 0; i <= 96; i++){
+              fifteen.push({
+                time: time.format("HH:mm"),
+                block_number
+              })
+              time.add(15, 'minutes');
+              block_number++;
+            }
+            return fifteen;
+          },
           getCalendar() {
             let block_number = 0;
             let days;
@@ -95,7 +111,7 @@
             for (let i = 0; i <= between_month; i++) {
               days = this.getDays(start_month.year(), start_month.format('MM'), block_number);
               this.calendars.push({
-                date: start_month.format('YYYY年MM月'),
+                date: start_month.format('YYYY年MM月DD日'),
                 year: start_month.year(),
                 month: start_month.month(), //month(), 0,1..11と表示
                 start_block_number: block_number,
@@ -110,7 +126,7 @@
           },
         },
         mounted() {
-          this.getCalendar();
+          console.log(this.getTime());
         }
       }).mount('#app')
     </script>
