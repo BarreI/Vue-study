@@ -14,26 +14,24 @@
 <body>
   <div id="app">
     <div id="gantt-header" class="h-12 p-2 flex items-center">
-      <h1 class="text-xl font-bold">ガントチャート</h1>
+      <h1 class="text-xl font-bold">シフト表</h1>
     </div>
     <div id="gantt-content" class="flex">
       <div id="gantt-task">
-        <div id="gantt-task">
-          <div id="gantt-task-title" class="flex items-center bg-green-600 text-white h-20">
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-36 h-full">担当
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">開始時間
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">終了時間
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">役職
-            </div>
-            <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-16 h-full">給金
-            </div>
+        <div id="gantt-task-title" class="flex items-center bg-green-600 text-white h-20" ref="task">
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-36 h-full">担当
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">開始時間
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">終了時間
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-24 h-full">役職
+          </div>
+          <div class="border-t border-r border-b flex items-center justify-center font-bold text-xs w-16 h-full">給金
           </div>
         </div>
       </div>
-      <div id="gantt-calendar">
+      <div id="gantt-calendar" class="overflow-x-scroll w-1/2">
         <div id="gantt-date" class="h-20">
           <div id="gantt-year-month" class="relative h-8">
             <div v-for="(calendar,index) in calendars" :key="index">
@@ -63,10 +61,14 @@
         data() {
           return {
             start_month: '2021-1',
-            end_month: '2022-1',
+            end_month: '2023-12',
             block_size: 30,
             block_number: 0,
-            calendars: []
+            calendars: [],
+            inner_width: '',
+            inner_height: '',
+            task_width: '',
+            task_height: '',
           }
         },
         methods: {
@@ -108,9 +110,19 @@
             }
             return block_number;
           },
+          getWindowSize() {
+            this.inner_width = window.innerWidth;
+            this.inner_height = window.innerHeight;
+            this.task_width = this.$refs.task.offsetWidth;
+            this.task_height = this.$refs.task.offsetHeight;
+          },
         },
         mounted() {
           this.getCalendar();
+          this.getWindowSize();
+          window.addEventListener('resize', this.getWindowSize);
+          this.task_width = this.$refs.task.offsetWidth;
+          this.task_height = this.$refs.task.offsetHeight;
         }
       }).mount('#app')
     </script>
