@@ -87,12 +87,12 @@
             let block_number = 0;
             let time = moment('00:00', 'HH:mm');
             let fifteen = [];
-            for (let i = 0; i <= 96; i++) {
+            for (let i = 0; i <= 24; i++) {
               fifteen.push({
                 time: time.format("HH:mm"),
                 block_number
               })
-              time.add(15, 'minutes');
+              time.add(60, 'minutes');
               block_number++;
             }
             return fifteen;
